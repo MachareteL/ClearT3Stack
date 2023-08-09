@@ -9,6 +9,7 @@ import {
 import { Pacifico } from "next/font/google";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
@@ -24,6 +25,10 @@ const pacifico = Pacifico({
 
 export default function Navbar() {
   const { status } = useSession();
+  const { pathname } = useRouter();
+  if (pathname == "/signup") {
+    return <></>;
+  }
   return (
     <Disclosure as="nav">
       {({ open }) => (
@@ -75,7 +80,10 @@ export default function Navbar() {
                 {/* Profile dropdown */}
 
                 {status != "authenticated" ? (
-                  <Link href={""} className={`mr-3 flex text-[#23A6F0] space-x-1`}>
+                  <Link
+                    href={""}
+                    className={`mr-3 flex space-x-1 text-[#23A6F0]`}
+                  >
                     <UserIcon className="h-6 w-6" />
                     Login
                   </Link>
