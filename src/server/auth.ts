@@ -45,6 +45,10 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   },
+  pages: {
+    signIn: "/signup",
+  },
+  secret:"aaaasasd",
   adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({

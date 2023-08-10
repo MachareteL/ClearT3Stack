@@ -4,6 +4,7 @@ import Image from "next/image";
 import { quicksand } from "..";
 import Link from "next/link";
 import { TextField } from "@mui/material";
+import { signIn } from "next-auth/react";
 
 const Index: NextPage = () => {
   function handleSubmit(e: React.FormEvent) {
@@ -44,7 +45,7 @@ const Index: NextPage = () => {
             Cadastrar
           </Link>
         </div>
-        
+
         <div
           id="form"
           className="flex h-full flex-col items-center justify-center"
@@ -60,7 +61,7 @@ const Index: NextPage = () => {
             onSubmit={(e) => {
               handleSubmit(e);
             }}
-            className="flex w-3/4 sm:w-1/2 flex-col space-y-16"
+            className="flex w-3/4 flex-col space-y-16 sm:w-1/2"
           >
             <div className="space-y-4">
               <div>
@@ -87,7 +88,17 @@ const Index: NextPage = () => {
               <button className="w-full rounded-md bg-primary-blue py-2 text-white">
                 Entrar
               </button>
-              <button className="w-full rounded-md border border-primary-blue py-2 text-primary-blue">
+              <button
+                onClick={() => signIn("google")}
+                className="w-full rounded-md border border-primary-blue py-2 text-primary-blue"
+              >
+                <Image
+                  src="/google.svg"
+                  alt=""
+                  className="mr-2 inline"
+                  width={32}
+                  height={32}
+                />
                 Entrar com conta Google
               </button>
             </div>
