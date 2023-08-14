@@ -20,9 +20,9 @@ model Product {
     name        String
     description String
     price       Float
+    categoryId  String
     category    Category     @relation(fields: [categoryId], references: [id])
     OrderItems  OrderItems[]
-    categoryId  String
 
     @@index([categoryId])
 }

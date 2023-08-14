@@ -1,53 +1,57 @@
 import { Storage } from "~/utils/firebaseConfig";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function CriarProduto() {
   const [carregamento, setCarregamento] = useState(0);
   const [URL, setURL] = useState("");
   const [touched, setTouched] = useState(false);
-  const [nome, setNome] = useState("");
+  const [product, setProduct] = useState<Product>({
+    name: "",
+    category: "",
+    price: 0,
+    description: "",
+  });
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const data = {
-      nome: nome,
-      //   descricao: event.target.descricao.value,
-      //   preco: event.target.preco.value,
-      //   categoria: event.target.categoria.value,
-      imagem: URL,
-    };
-    const batida = await fetch("http://localhost:3000/api/produtos/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    const response = await batida.json();
-    response.ok
-      ? alert({ text: response.message, icon: "success" })
-      : alert({ text: response.message, icon: "error" });
   }
-
-  function handleInput(e: any) {
-    e.preventDefault();
-    console.log("Entrou no input");
-    console.log(e);
+  function resetImageInput() {
     if (touched) {
       setURL("");
       setTouched(!touched);
       return;
-    } else {
-      setTouched(true);
     }
-    const files = e.target.files;
-    if (!files) {
+    setTouched(true);
+  }
+
+  function handleProductInfoInput(
+    event: ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) {
+    const label = event.currentTarget.name;
+    const content = event.target.value;
+    if (!label || !content) {
       return;
     }
+    const newProduct: Product = { ...product, [label]: content };
+    setProduct(newProduct);
+  }
+  useEffect(() => {
+    console.log(product);
+  }, [product]);
+
+  function handleImageInput(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault();
+    console.log(e);
+
+    const files = e.target.files;
+    if (!files) return;
     const file = files[0];
     if (!file) return;
-    const storageREF = ref(Storage, `images/${nome}`);
+    const storageREF = ref(Storage, `imageProduct/${file.name.split(".")[0]}`);
     const uploadTask = uploadBytesResumable(storageREF, file);
+    console.log({ product });
 
     uploadTask.on(
       "state_changed",
@@ -84,39 +88,42 @@ export default function CriarProduto() {
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-3 ">
                       <label
-                        htmlFor="nome"
+                        htmlFor="name"
                         className="block text-sm font-medium leading-6 text-gray-900"
                       >
-                        Nome do Produto
+                        Product name
                       </label>
                       <div className="mt-2 flex rounded-md shadow-sm">
                         <input
                           type="text"
-                          name="nome"
-                          id="nome"
+                          name="name"
+                          id="name"
                           className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           placeholder="Detergente Clear"
-                          onChange={(e) => setNome(e.target.value)}
+                          onChange={(e) => handleProductInfoInput(e)}
                         />
                       </div>
                     </div>
                     <div className="col-span-3">
                       <label
-                        htmlFor="categoria"
+                        htmlFor="category"
                         className="block text-sm font-medium leading-6 text-gray-900"
                       >
-                        Categoria do Produto
+                        Product category
                       </label>
                       <div className="mt-2 flex rounded-md shadow-sm">
                         <select
                           defaultValue={""}
                           required
-                          name="categoria"
-                          id="categoria"
+                          name="category"
+                          onChange={(e) => {
+                            handleProductInfoInput(e);
+                          }}
+                          id="category"
                           className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                         >
                           <option value="" disabled>
-                            Selecione uma categoria
+                            Select a category
                           </option>
                           <option value="desinfetante">Desinfetante</option>
                           <option value="sabao">Sabão</option>
@@ -128,26 +135,29 @@ export default function CriarProduto() {
 
                   <div>
                     <label
-                      htmlFor="descricao"
+                      htmlFor="description"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Descrição
+                      Description
                     </label>
                     <div className="mt-2">
                       <textarea
-                        id="descricao"
-                        name="descricao"
+                        id="description"
+                        name="description"
                         rows={3}
                         className="mt-1 block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
                         placeholder="Descrição do Produto a ser registrada no banco de dados"
                         defaultValue={""}
+                        onChange={(e) => {
+                          handleProductInfoInput(e);
+                        }}
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium leading-6 text-gray-900">
-                      Foto do Produto
+                      Product Image
                     </label>
 
                     {!URL && (
@@ -164,7 +174,7 @@ export default function CriarProduto() {
                     {touched ? (
                       <button
                         className="flex justify-center md:justify-start"
-                        onClick={(e) => handleInput(e)}
+                        onClick={(e) => resetImageInput()}
                       >
                         <img
                           src={URL}
@@ -199,8 +209,8 @@ export default function CriarProduto() {
                                 name="file-upload"
                                 type="file"
                                 className="sr-only"
-                                onInput={(e) => {
-                                  handleInput(e);
+                                onChange={(e) => {
+                                  handleImageInput(e);
                                 }}
                               />
                             </label>
@@ -216,16 +226,19 @@ export default function CriarProduto() {
                   <div>
                     <div className="grid">
                       <label
-                        htmlFor="preco"
+                        htmlFor="price"
                         className="block text-sm font-medium leading-6 text-gray-900"
                       >
-                        Preço
+                        Price
                       </label>
                       <input
                         type="number"
-                        name="preco"
-                        id="preco"
-                        className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "
+                        name="price"
+                        id="price"
+                        className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        onChange={(e) => {
+                          handleProductInfoInput(e);
+                        }}
                       />
                     </div>
                   </div>
