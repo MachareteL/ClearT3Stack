@@ -18,19 +18,11 @@ datasource db {
 model Product {
     id          String       @id @default(cuid())
     name        String
-    description String
     price       Float
-    categoryId  String
-    category    Category     @relation(fields: [categoryId], references: [id])
+    description String
+    imageUrl    String
+    category    String
     OrderItems  OrderItems[]
-
-    @@index([categoryId])
-}
-
-model Category {
-    id      String    @id @default(cuid())
-    name    String
-    Product Product[]
 }
 
 model Orders {

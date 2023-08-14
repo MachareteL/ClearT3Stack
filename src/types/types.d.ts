@@ -1,6 +1,7 @@
 type Product = {
   name: string;
   category: string;
-  price: number
-  description: string
+  price: string;
+  description: string;
+  imageURL: string;
 };

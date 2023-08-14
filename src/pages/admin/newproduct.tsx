@@ -1,23 +1,31 @@
 import { Storage } from "~/utils/firebaseConfig";
 import { ChangeEvent, useEffect, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { api } from "~/utils/api";
 
 export default function CriarProduto() {
   const [carregamento, setCarregamento] = useState(0);
-  const [URL, setURL] = useState("");
   const [touched, setTouched] = useState(false);
   const [product, setProduct] = useState<Product>({
     name: "",
     category: "",
-    price: 0,
+    price: "",
     description: "",
+    imageURL: "",
+  });
+  const createProduct = api.product.create.useMutation({
+    onSuccess: (teste) => {
+      console.log("deu certo");
+      console.log({ teste });
+    },
   });
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    createProduct.mutate({ product });
   }
   function resetImageInput() {
     if (touched) {
-      setURL("");
+      setProduct({ ...product, imageURL: "" });
       setTouched(!touched);
       return;
     }
@@ -51,8 +59,7 @@ export default function CriarProduto() {
     if (!file) return;
     const storageREF = ref(Storage, `imageProduct/${file.name.split(".")[0]}`);
     const uploadTask = uploadBytesResumable(storageREF, file);
-    console.log({ product });
-
+    setTouched(true);
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -64,8 +71,8 @@ export default function CriarProduto() {
         alert(error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setURL(url);
+        getDownloadURL(uploadTask.snapshot.ref).then((imageURL) => {
+          setProduct({ ...product, imageURL });
         });
       }
     );
@@ -160,7 +167,7 @@ export default function CriarProduto() {
                       Product Image
                     </label>
 
-                    {!URL && (
+                    {!product.imageURL && (
                       <progress
                         value={carregamento}
                         max={100}
@@ -177,7 +184,7 @@ export default function CriarProduto() {
                         onClick={(e) => resetImageInput()}
                       >
                         <img
-                          src={URL}
+                          src={product.imageURL}
                           className="mx-auto mt-5 max-h-96 p-1 outline-dashed outline-1"
                         />{" "}
                       </button>

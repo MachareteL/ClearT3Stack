@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
+  { name: "Home", href: "#", current: true },
   { name: "Team", href: "#", current: false },
   { name: "Projects", href: "#", current: false },
   { name: "Calendar", href: "#", current: false },
