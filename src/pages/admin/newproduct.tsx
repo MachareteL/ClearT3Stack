@@ -1,5 +1,5 @@
 import { Storage } from "~/utils/firebaseConfig";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export default function CriarProduto() {
@@ -11,9 +11,9 @@ export default function CriarProduto() {
     event.preventDefault();
     const data = {
       nome: nome,
-    //   descricao: event.target.descricao.value,
-    //   preco: event.target.preco.value,
-    //   categoria: event.target.categoria.value,
+      //   descricao: event.target.descricao.value,
+      //   preco: event.target.preco.value,
+      //   categoria: event.target.categoria.value,
       imagem: URL,
     };
     const batida = await fetch("http://localhost:3000/api/produtos/create", {
@@ -29,7 +29,7 @@ export default function CriarProduto() {
       : alert({ text: response.message, icon: "error" });
   }
 
-  function handleInput(e) {
+  function handleInput(e: any) {
     e.preventDefault();
     console.log("Entrou no input");
     console.log(e);
@@ -40,7 +40,11 @@ export default function CriarProduto() {
     } else {
       setTouched(true);
     }
-    const file = e.target.files[0];
+    const files = e.target.files;
+    if (!files) {
+      return;
+    }
+    const file = files[0];
     if (!file) return;
     const storageREF = ref(Storage, `images/${nome}`);
     const uploadTask = uploadBytesResumable(storageREF, file);
@@ -76,7 +80,7 @@ export default function CriarProduto() {
             <form onSubmit={handleSubmit}>
               <div className="shadow sm:overflow-hidden sm:rounded-md">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
-                  {/* Campo nome e categoria*/}
+                  {/* Name and Category fields*/}
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-3 ">
                       <label
@@ -158,7 +162,7 @@ export default function CriarProduto() {
                       />
                     )}
                     {touched ? (
-                      <div
+                      <button
                         className="flex justify-center md:justify-start"
                         onClick={(e) => handleInput(e)}
                       >
@@ -166,7 +170,7 @@ export default function CriarProduto() {
                           src={URL}
                           className="mx-auto mt-5 max-h-96 p-1 outline-dashed outline-1"
                         />{" "}
-                      </div>
+                      </button>
                     ) : (
                       <div className="mt-2 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pb-6 pt-5">
                         <div className="space-y-1 text-center">
