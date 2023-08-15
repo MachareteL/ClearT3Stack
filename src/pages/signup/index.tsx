@@ -5,10 +5,15 @@ import { quicksand } from "..";
 import Link from "next/link";
 import { TextField } from "@mui/material";
 import { signIn } from "next-auth/react";
+import React from "react";
 
 const Index: NextPage = () => {
   function handleSubmit(e: React.FormEvent) {
     console.log(e);
+  }
+  function handleSignIn(e: React.MouseEvent<HTMLButtonElement>) {
+    e.preventDefault();
+    signIn("google");
   }
   return (
     <div className={quicksand.className}>
@@ -89,7 +94,7 @@ const Index: NextPage = () => {
                 Entrar
               </button>
               <button
-                onClick={() => signIn("google")}
+                onClick={(e) => handleSignIn(e)}
                 className="w-full rounded-md border border-primary-blue py-2 text-primary-blue"
               >
                 <Image
