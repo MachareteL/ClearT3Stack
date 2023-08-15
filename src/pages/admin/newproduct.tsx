@@ -14,9 +14,8 @@ export default function CriarProduto() {
     imageURL: "",
   });
   const createProduct = api.product.create.useMutation({
-    onSuccess: (teste) => {
-      console.log("deu certo");
-      console.log({ teste });
+    onSuccess: () => {
+      alert('Produto cadastrado com sucesso!')
     },
   });
   async function handleSubmit(event: React.FormEvent) {
@@ -45,9 +44,6 @@ export default function CriarProduto() {
     const newProduct: Product = { ...product, [label]: content };
     setProduct(newProduct);
   }
-  useEffect(() => {
-    console.log(product);
-  }, [product]);
 
   function handleImageInput(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();

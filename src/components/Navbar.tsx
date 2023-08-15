@@ -10,12 +10,14 @@ import { Pacifico } from "next/font/google";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
+import Image from "next/image";
+import Clear from "public/ClearG.svg";
+import Logo from "public/logo.png";
 const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
+  { name: "Home", href: "/", current: true },
+  { name: "Catálogo", href: "/product", current: false },
+  { name: "Quem Somos", href: "#", current: false },
+  { name: "Frete", href: "#", current: false },
 ];
 
 const pacifico = Pacifico({
@@ -49,17 +51,25 @@ export default function Navbar() {
               </div>
               <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start sm:space-x-20">
                 <Link href={"/"} className="flex flex-shrink-0 items-center">
-                  <img
+                  <Image
+                    height={42}
+                    width={42}
+                    // src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
+                    src={Logo}
+                    alt="Your Company"
+                  />
+                  <Image src={Clear} alt="Clear" height={42} width={72} />
+                  {/* <img
                     className="h-10 w-auto"
                     // src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
                     src="logo.png"
                     alt="Your Company"
-                  />
-                  <h1
+                  /> */}
+                  {/* <h1
                     className={`${pacifico.className} text-3xl text-[#252B42]`}
                   >
                     Clear
-                  </h1>
+                  </h1> */}
                 </Link>
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex h-full items-center space-x-4">
@@ -69,7 +79,7 @@ export default function Navbar() {
                         href={item.href}
                         className={`${
                           item.current ? "" : ""
-                        } text-sm font-medium text-[#737373]`}
+                        } text-base font-medium text-[#737373]`}
                         aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}

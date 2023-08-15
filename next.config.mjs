@@ -18,6 +18,9 @@ const config = {
     locales: ["pt-br"],
     defaultLocale: "pt-br",
   },
+  images: {
+    remotePatterns: [{ hostname: "firebasestorage.googleapis.com" }],
+  },
 };
 
 export default config;
