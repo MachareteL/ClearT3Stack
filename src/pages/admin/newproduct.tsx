@@ -9,22 +9,24 @@ export default function CriarProduto() {
   const [product, setProduct] = useState<Product>({
     name: "",
     category: "",
-    price: "",
+    price: 0,
     description: "",
-    imageURL: "",
+    imageUrl: "",
   });
+
   const createProduct = api.product.create.useMutation({
     onSuccess: () => {
       alert('Produto cadastrado com sucesso!')
     },
   });
+  
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     createProduct.mutate({ product });
   }
   function resetImageInput() {
     if (touched) {
-      setProduct({ ...product, imageURL: "" });
+      setProduct({ ...product, imageUrl: "" });
       setTouched(!touched);
       return;
     }
@@ -67,8 +69,8 @@ export default function CriarProduto() {
         alert(error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((imageURL) => {
-          setProduct({ ...product, imageURL });
+        getDownloadURL(uploadTask.snapshot.ref).then((imageUrl) => {
+          setProduct({ ...product, imageUrl });
         });
       }
     );
@@ -163,7 +165,7 @@ export default function CriarProduto() {
                       Product Image
                     </label>
 
-                    {!product.imageURL && (
+                    {!product.imageUrl && (
                       <progress
                         value={carregamento}
                         max={100}
@@ -180,7 +182,7 @@ export default function CriarProduto() {
                         onClick={(e) => resetImageInput()}
                       >
                         <img
-                          src={product.imageURL}
+                          src={product.imageUrl}
                           className="mx-auto mt-5 max-h-96 p-1 outline-dashed outline-1"
                         />{" "}
                       </button>

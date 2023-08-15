@@ -7,9 +7,9 @@ const Index: NextPage = ({}) => {
   console.log(data);
 
   return (
-    <div className="container mx-auto grid h-screen grid-cols-12">
-      <div className="col-span-3 h-screen"></div>
-      <div className="col-span-9 flex flex-1 flex-wrap">
+    <div className="container mx-auto grid sm:grid-cols-12">
+      <div className="col-span-3 hidden h-screen sm:block"></div>
+      <div className="flex flex-wrap items-end gap-4 sm:col-span-9">
         {data?.map((product) => (
           <ProductCard {...product} />
         ))}

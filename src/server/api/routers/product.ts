@@ -13,9 +13,9 @@ export const productRouter = createTRPCRouter({
         product: z.object({
           name: z.string(),
           category: z.string(),
-          price: z.string(),
+          price: z.coerce.number(),
           description: z.string(),
-          imageURL: z.string(),
+          imageUrl: z.string(),
         }),
       })
     )
@@ -23,15 +23,15 @@ export const productRouter = createTRPCRouter({
       if (!product) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
-      console.log(product.imageURL.length);
+      console.log(product.imageUrl.length);
       console.log("\n\n\npreço: ", product.price);
 
       const newProduct = await ctx.prisma.product.create({
         data: {
           name: product.name,
           description: product.description,
-          price: parseFloat(product.price),
-          imageUrl: product.imageURL,
+          price: product.price,
+          imageUrl: product.imageUrl,
           category: product.category,
         },
       });
