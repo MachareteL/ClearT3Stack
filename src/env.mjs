@@ -33,6 +33,7 @@ export const env = createEnv({
     appId: z.string(),
     measurementId: z.string(),
     storageURL: z.string(),
+    adminEmail: z.string(),
   },
 
   /**
@@ -64,7 +65,8 @@ export const env = createEnv({
     measurementId: process.env.measurementId,
     storageURL: process.env.storageURL,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET
+    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    adminEmail: process.env.adminEmail,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

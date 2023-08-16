@@ -8,6 +8,9 @@ export const quicksand = Quicksand({
   subsets: ["latin"],
 });
 export default function Home() {
+  const user = useSession()
+  console.log(user);
+  
   return (
     <>
       <Head>
