@@ -6,7 +6,6 @@ import {
   UserIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Pacifico } from "next/font/google";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -19,11 +18,6 @@ const navigation = [
   { name: "Quem Somos", href: "#", current: false },
   { name: "Frete", href: "#", current: false },
 ];
-
-const pacifico = Pacifico({
-  weight: "400",
-  subsets: ["cyrillic"],
-});
 
 export default function Navbar() {
   const { status, data } = useSession();
@@ -161,6 +155,36 @@ export default function Navbar() {
                             </Link>
                           )}
                         </Menu.Item>
+                        {data.user.role == "admin" ? (
+                          <>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  href="/admin/newproduct"
+                                  className={`${
+                                    active ? "bg-gray-100" : ""
+                                  } block px-4 py-2 text-sm text-gray-700`}
+                                >
+                                  Criar Produtos
+                                </Link>
+                              )}
+                            </Menu.Item>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <Link
+                                  href="/admin/manageproduct"
+                                  className={`${
+                                    active ? "bg-gray-100" : ""
+                                  } block px-4 py-2 text-sm text-gray-700`}
+                                >
+                                  Gerenciar Produtos
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          </>
+                        ) : (
+                          <></>
+                        )}
                       </Menu.Items>
                     </Transition>
                   </Menu>

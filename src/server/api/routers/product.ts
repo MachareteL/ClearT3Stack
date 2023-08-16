@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { env } from "~/env.mjs";
 import {
   createTRPCRouter,
   publicProcedure,
@@ -7,7 +8,7 @@ import {
 } from "~/server/api/trpc";
 
 export const productRouter = createTRPCRouter({
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         product: z.object({
@@ -23,9 +24,9 @@ export const productRouter = createTRPCRouter({
       if (!product) {
         throw new TRPCError({ code: "BAD_REQUEST" });
       }
-      console.log(product.imageUrl.length);
-      console.log("\n\n\npreço: ", product.price);
-
+      if (ctx.session.user.email != env.adminEmail) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
       const newProduct = await ctx.prisma.product.create({
         data: {
           name: product.name,
@@ -40,6 +41,28 @@ export const productRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const products = await ctx.prisma.product.findMany();
     console.log(products);
-    return products
+    return products;
   }),
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input: { id } }) => {
+      const product = await ctx.prisma.product.findUnique({
+        where: {
+          id,
+        },
+      });
+      return product;
+    }),
+  delete: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input: { id } }) => {
+      const product = ctx.prisma.product.delete({
+        where: {
+          id,
+        },
+      });
+      console.log(product);
+
+      return "sucess";
+    }),
 });
