@@ -9,7 +9,6 @@ const Manageproduct: NextPage = () => {
   const [currentProduct, setCurrentProduct] = useState<Product>();
   const [id, setId] = useState("");
   const { data } = api.product.getById.useQuery({ id });
-  const handleDelete = 
   useEffect(() => {
     if (data) {
       setCurrentProduct(data);

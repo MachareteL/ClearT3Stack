@@ -1,5 +1,5 @@
 import { Storage } from "~/utils/firebaseConfig";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { api } from "~/utils/api";
 
@@ -77,7 +77,7 @@ export default function CriarProduto() {
   }
 
   return (
-    <div className="container m-auto">
+    <div className="container m-auto px-12">
       <div>
         <div className="md:grid md:grid-cols-1 md:gap-6">
           <div className="md:col-span-1">
@@ -183,6 +183,7 @@ export default function CriarProduto() {
                       >
                         <img
                           src={product.imageUrl}
+                          alt=""
                           className="mx-auto mt-5 max-h-96 p-1 outline-dashed outline-1"
                         />{" "}
                       </button>
