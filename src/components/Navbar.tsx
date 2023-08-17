@@ -15,7 +15,7 @@ import Logo from "public/logo.png";
 const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Catálogo", href: "/product", current: false },
-  { name: "Quem Somos", href: "#", current: false },
+  { name: "Quem Somos", href: "/about", current: false },
   { name: "Frete", href: "#", current: false },
 ];
 

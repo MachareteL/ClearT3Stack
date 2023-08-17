@@ -6,28 +6,30 @@ import {
   FunnelIcon,
   MinusIcon,
   PlusIcon,
-  Squares2X2Icon,
 } from "@heroicons/react/20/solid";
 import ProductCard from "~/components/ProductCard";
 import { api } from "~/utils/api";
+
 const sortOptions = [
   { name: "Em Promoção", href: "#", current: true },
   { name: "Menor Preço", href: "#", current: false },
   { name: "Maior Preço", href: "#", current: false },
 ];
+
 const subCategories = [
   { name: "Todos os Produtos", href: "#" },
   { name: "Produtos para Casa", href: "#" },
   { name: "Produtos para o Carro", href: "#" },
   { name: "Diversos", href: "#" },
 ];
-const filters = [
+
+const filters: Filter[] = [
   {
     id: "size",
     name: "Tamanho",
     options: [
-      { value: "5 Litros", label: "5 Litros", checked: true },
-      { value: "2 Litro", label: "2 Litros", checked: true },
+      { value: "5", label: "5 Litros", checked: true },
+      { value: "2", label: "2 Litros", checked: true },
     ],
   },
   {
@@ -41,12 +43,13 @@ const filters = [
       { value: "Diversos", label: "Diversos", checked: false },
       { value: "Gel", label: "Produtos em Gel", checked: false },
       { value: "Alcool", label: "Alcool Perfumado", checked: false },
-      ],
+    ],
   },
 ];
 
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [filter, setFilter] = useState<Filter[]>(filters);
   const { data } = api.product.getAll.useQuery();
 
   return (
@@ -228,7 +231,6 @@ export default function Product() {
                 </Transition>
               </Menu>
 
-              
               <button
                 type="button"
                 className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
@@ -295,11 +297,11 @@ export default function Product() {
                                   defaultValue={option.value}
                                   type="checkbox"
                                   defaultChecked={option.checked}
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                  className="h-4 w-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                                 <label
                                   htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 text-sm text-gray-600 cursor-pointer"
+                                  className="ml-3 cursor-pointer text-sm text-gray-600"
                                 >
                                   {option.label}
                                 </label>

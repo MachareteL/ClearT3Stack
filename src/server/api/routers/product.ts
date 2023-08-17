@@ -17,6 +17,7 @@ export const productRouter = createTRPCRouter({
           price: z.coerce.number(),
           description: z.string(),
           imageUrl: z.string(),
+          volume: z.coerce.number(),
         }),
       })
     )
@@ -28,21 +29,30 @@ export const productRouter = createTRPCRouter({
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       const newProduct = await ctx.prisma.product.create({
-        data: {
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          category: product.category,
-        },
+        data: product,
       });
       return newProduct;
     }),
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const products = await ctx.prisma.product.findMany();
-    console.log(products);
-    return products;
-  }),
+  getAll: publicProcedure
+    .input(
+      z
+        .object({
+          sort: z
+            .object({
+              sortOptions: z.string(),
+              current: z.boolean(),
+            })
+            .optional(),
+        })
+        .optional()
+    )
+    .query(async ({ ctx, input }) => {
+      const products = await ctx.prisma.product.findMany({
+        where: {},
+      });
+      // console.log(products);
+      return products;
+    }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input: { id } }) => {
@@ -61,7 +71,7 @@ export const productRouter = createTRPCRouter({
           id,
         },
       });
-      console.log(product);
+      // console.log(product);
 
       return "sucess";
     }),

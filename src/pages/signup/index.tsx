@@ -13,7 +13,7 @@ const Index: NextPage = () => {
   }
   function handleSignIn(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    signIn("google");
+    signIn("google", { callbackUrl: '/'});
   }
   return (
     <div className={quicksand.className}>

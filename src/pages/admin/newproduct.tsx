@@ -12,14 +12,16 @@ export default function CriarProduto() {
     price: 0,
     description: "",
     imageUrl: "",
+    volume: 5,
+    onSale: false
   });
 
   const createProduct = api.product.create.useMutation({
     onSuccess: () => {
-      alert('Produto cadastrado com sucesso!')
+      alert("Produto cadastrado com sucesso!");
     },
   });
-  
+
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     createProduct.mutate({ product });
@@ -103,7 +105,7 @@ export default function CriarProduto() {
                           type="text"
                           name="name"
                           id="name"
-                          className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-blue sm:text-sm sm:leading-6"
                           placeholder="Detergente Clear"
                           onChange={(e) => handleProductInfoInput(e)}
                         />
@@ -125,7 +127,7 @@ export default function CriarProduto() {
                             handleProductInfoInput(e);
                           }}
                           id="category"
-                          className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                          className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-blue sm:text-sm sm:leading-6"
                         >
                           <option value="" disabled>
                             Select a category
@@ -150,7 +152,7 @@ export default function CriarProduto() {
                         id="description"
                         name="description"
                         rows={3}
-                        className="mt-1 block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:py-1.5 sm:text-sm sm:leading-6"
+                        className="mt-1 block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-blue sm:py-1.5 sm:text-sm sm:leading-6"
                         placeholder="Descrição do Produto a ser registrada no banco de dados"
                         defaultValue={""}
                         onChange={(e) => {
@@ -207,7 +209,7 @@ export default function CriarProduto() {
                           <div className="flex text-sm text-gray-600">
                             <label
                               htmlFor="file-upload"
-                              className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
+                              className="relative cursor-pointer rounded-md bg-white font-medium text-primary-blue focus-within:outline-none focus-within:ring-2 focus-within:ring-primary-blue focus-within:ring-offset-2 hover:text-primary-blue"
                             >
                               <span>Upload a file</span>
                               <input
@@ -230,29 +232,48 @@ export default function CriarProduto() {
                     )}
                   </div>
                   <div>
-                    <div className="grid">
-                      <label
-                        htmlFor="price"
-                        className="block text-sm font-medium leading-6 text-gray-900"
-                      >
-                        Price
-                      </label>
-                      <input
-                        type="number"
-                        name="price"
-                        id="price"
-                        className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        onChange={(e) => {
-                          handleProductInfoInput(e);
-                        }}
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label
+                          htmlFor="price"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Price
+                        </label>
+                        <input
+                          type="number"
+                          name="price"
+                          id="price"
+                          className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-blue sm:text-sm sm:leading-6"
+                          onChange={(e) => {
+                            handleProductInfoInput(e);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label
+                          htmlFor="volume"
+                          className="block text-sm font-medium leading-6 text-gray-900"
+                        >
+                          Volume
+                        </label>
+                        <select
+                          onChange={(e) => handleProductInfoInput(e)}
+                          name="volume"
+                          id="volume"
+                          className="block w-full flex-1 rounded-md border-0 px-4 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-blue sm:text-sm sm:leading-6"
+                        >
+                          <option value="5">5 Litros</option>
+                          <option value="2">2 Litros</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
                     type="submit"
-                    className="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                    className="inline-flex justify-center rounded-md bg-primary-blue px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-blue focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-blue"
                   >
                     Enviar
                   </button>

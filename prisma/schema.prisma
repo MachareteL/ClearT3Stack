@@ -22,6 +22,9 @@ model Product {
     description String
     imageUrl    String
     category    String
+    volume      Int
+    onSale      Boolean      @default(false)
+    discount    Float?
     OrderItems  OrderItems[]
 }
 
