@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -23,9 +23,9 @@ const subCategories = [
   { name: "Diversos", href: "#" },
 ];
 
-const filters: Filter[] = [
+const filters = [
   {
-    id: "size",
+    id: "volume",
     name: "Tamanho",
     options: [
       { value: "5", label: "5 Litros", checked: true },
@@ -34,7 +34,7 @@ const filters: Filter[] = [
   },
   {
     id: "category",
-    name: "Category",
+    name: "Categoria",
     options: [
       { value: "Sabão", label: "Sabão", checked: false },
       { value: "Desinfetante", label: "Desinfetante", checked: false },
@@ -49,9 +49,38 @@ const filters: Filter[] = [
 
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [filter, setFilter] = useState<Filter[]>(filters);
-  const { data } = api.product.getAll.useQuery();
+  const [filter, setFilter] = useState<
+    {
+      filter: {
+        key: string;
+        value: string;
+        checked: boolean;
+      };
+    }[]
+  >([{ filter: { key: "volume", value: "2", checked: true } }]);
+  const { data } = api.product.getAll.useQuery(filter);
 
+  function handleFilterChange(event: ChangeEvent<HTMLInputElement>) {
+    const tet = {
+      [event.currentTarget.name]: event.currentTarget.value,
+      shouldFilter: event.currentTarget.checked,
+    };
+    console.log(tet);
+  }
+
+  useEffect(() => {
+    let param: FilterParam[] = [];
+    filters.map(({ id, options }) => {
+      options.map(({ value, checked }) => {
+        param.push({ filter: { key: id, value, checked } });
+      });
+    });
+    console.log(param);
+
+    setFilter(() => {
+      return param;
+    });
+  }, []);
   return (
     <div className="">
       <div>
@@ -150,11 +179,12 @@ export default function Product() {
                                   >
                                     <input
                                       id={`filter-mobile-${section.id}-${optionIdx}`}
-                                      name={`${section.id}[]`}
+                                      name={`${section.id}`}
                                       defaultValue={option.value}
                                       type="checkbox"
                                       defaultChecked={option.checked}
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                      onChange={handleFilterChange}
                                     />
                                     <label
                                       htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
@@ -293,11 +323,12 @@ export default function Product() {
                               >
                                 <input
                                   id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
+                                  name={`${section.id}`}
                                   defaultValue={option.value}
                                   type="checkbox"
                                   defaultChecked={option.checked}
                                   className="h-4 w-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  onChange={handleFilterChange}
                                 />
                                 <label
                                   htmlFor={`filter-${section.id}-${optionIdx}`}

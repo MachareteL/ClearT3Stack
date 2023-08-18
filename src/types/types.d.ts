@@ -21,3 +21,11 @@ type Option = {
   label: string;
   checked: boolean;
 };
+
+type FilterParam = {
+  filter: {
+    value: string;
+    checked: boolean;
+    key: string;
+  };
+};

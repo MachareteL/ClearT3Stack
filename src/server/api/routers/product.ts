@@ -35,20 +35,27 @@ export const productRouter = createTRPCRouter({
     }),
   getAll: publicProcedure
     .input(
-      z
-        .object({
-          sort: z
-            .object({
-              sortOptions: z.string(),
-              current: z.boolean(),
-            })
-            .optional(),
+      z.array(
+        z.object({
+          filter: z.object({
+            key: z.string(),
+            value: z.string(),
+            checked: z.boolean(),
+          }),
         })
-        .optional()
+      )
     )
     .query(async ({ ctx, input }) => {
+      let params = {};
+      input.map(({ filter: { key, value } }) => {
+        params = {
+          ...params,
+          [key]: !isNaN(parseFloat(value)) ? parseFloat(value) : value,
+        };
+        console.log(params);
+      });
       const products = await ctx.prisma.product.findMany({
-        where: {},
+        where: params,
       });
       // console.log(products);
       return products;
