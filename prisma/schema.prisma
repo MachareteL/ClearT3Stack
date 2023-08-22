@@ -26,6 +26,16 @@ model Product {
     onSale      Boolean      @default(false)
     discount    Float?
     OrderItems  OrderItems[]
+    Category    Category?    @relation(fields: [categoryId], references: [id])
+    categoryId  String?
+
+    @@index([categoryId])
+}
+
+model Category {
+    id       String    @id @default(cuid())
+    name     String
+    products Product[]
 }
 
 model Orders {
