@@ -58,29 +58,16 @@ export default function Product() {
       };
     }[]
   >([{ filter: { key: "volume", value: "2", checked: true } }]);
-  const { data } = api.product.getAll.useQuery(filter);
+  const { data } = api.product.getAll.useQuery();
 
   function handleFilterChange(event: ChangeEvent<HTMLInputElement>) {
     const tet = {
       [event.currentTarget.name]: event.currentTarget.value,
       shouldFilter: event.currentTarget.checked,
     };
-    console.log(tet);
   }
 
-  useEffect(() => {
-    let param: FilterParam[] = [];
-    filters.map(({ id, options }) => {
-      options.map(({ value, checked }) => {
-        param.push({ filter: { key: id, value, checked } });
-      });
-    });
-    console.log(param);
 
-    setFilter(() => {
-      return param;
-    });
-  }, []);
   return (
     <div className="">
       <div>
@@ -242,13 +229,11 @@ export default function Product() {
                             <a
                               href={option.href}
                               className={`
-                                ${
-                                  option.current
-                                    ? "font-medium text-gray-900"
-                                    : "text-gray-500"
-                                } ${
-                                active ? "bg-gray-100" : ""
-                              } block px-4 py-2 text-sm
+                                ${option.current
+                                  ? "font-medium text-gray-900"
+                                  : "text-gray-500"
+                                } ${active ? "bg-gray-100" : ""
+                                } block px-4 py-2 text-sm
                               `}
                             >
                               {option.name}

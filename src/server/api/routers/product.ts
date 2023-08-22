@@ -28,38 +28,34 @@ export const productRouter = createTRPCRouter({
       if (ctx.session.user.email != env.adminEmail) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
+
       const newProduct = await ctx.prisma.product.create({
-        data: product,
+        data: {
+          ...product,
+          Category: {
+            connectOrCreate: {
+              where: {
+                name: product.category,
+              },
+              create: {
+                name: product.category,
+              },
+            },
+          },
+        },
       });
+
       return newProduct;
     }),
-  getAll: publicProcedure
-    .input(
-      z.array(
-        z.object({
-          filter: z.object({
-            key: z.string(),
-            value: z.string(),
-            checked: z.boolean(),
-          }),
-        })
-      )
-    )
-    .query(async ({ ctx, input }) => {
-      let params = {};
-      input.map(({ filter: { key, value } }) => {
-        params = {
-          ...params,
-          [key]: !isNaN(parseFloat(value)) ? parseFloat(value) : value,
-        };
-        console.log(params);
-      });
-      const products = await ctx.prisma.product.findMany({
-        where: params,
-      });
-      // console.log(products);
-      return products;
-    }),
+  getAll: publicProcedure.query(async ({ ctx, input }) => {
+    const category = await ctx.prisma.category.findMany({
+      include: {
+        products: true,
+      },
+    });
+    const products = category.flatMap(({ products }) => products);
+    return products
+  }),
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input: { id } }) => {
