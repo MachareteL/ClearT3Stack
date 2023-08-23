@@ -35,7 +35,7 @@ model Product {
 model Category {
     id   String @id @default(cuid())
     name String @unique
-
+    environment Environment?
     products Product[]
 }
 
@@ -65,6 +65,12 @@ enum Status {
     pending
     delivered
     onRoute
+}
+
+enum Environment {
+    home
+    auto
+    miscellaneous
 }
 
 // model Example {

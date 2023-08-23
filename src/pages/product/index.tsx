@@ -13,7 +13,6 @@ import { api } from "~/utils/api";
 const sortOptions = [
   { name: "Em Promoção", href: "#", current: true },
   { name: "Menor Preço", href: "#", current: false },
-  { name: "Maior Preço", href: "#", current: false },
 ];
 
 const subCategories = [
@@ -29,13 +28,14 @@ const filters = [
     name: "Tamanho",
     options: [
       { value: "5", label: "5 Litros", checked: true },
-      { value: "2", label: "2 Litros", checked: true },
+      { value: "2", label: "2 Litros", checked: false },
     ],
   },
   {
     id: "category",
     name: "Categoria",
     options: [
+      { value: "", label: "Todos", checked: true },
       { value: "Sabão", label: "Sabão", checked: false },
       { value: "Desinfetante", label: "Desinfetante", checked: false },
       { value: "Sabonete", label: "Sabonete", checked: false },
@@ -49,24 +49,12 @@ const filters = [
 
 export default function Product() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [filter, setFilter] = useState<
-    {
-      filter: {
-        key: string;
-        value: string;
-        checked: boolean;
-      };
-    }[]
-  >([{ filter: { key: "volume", value: "2", checked: true } }]);
-  const { data } = api.product.getAll.useQuery();
+  const [filter, setFilter] = useState("");
+  const { data } = api.product.getAll.useQuery({ name: filter});
 
   function handleFilterChange(event: ChangeEvent<HTMLInputElement>) {
-    const tet = {
-      [event.currentTarget.name]: event.currentTarget.value,
-      shouldFilter: event.currentTarget.checked,
-    };
+    setFilter(event.target.value)
   }
-
 
   return (
     <div className="">
@@ -168,7 +156,7 @@ export default function Product() {
                                       id={`filter-mobile-${section.id}-${optionIdx}`}
                                       name={`${section.id}`}
                                       defaultValue={option.value}
-                                      type="checkbox"
+                                      type="radio"
                                       defaultChecked={option.checked}
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                       onChange={handleFilterChange}
@@ -229,11 +217,13 @@ export default function Product() {
                             <a
                               href={option.href}
                               className={`
-                                ${option.current
-                                  ? "font-medium text-gray-900"
-                                  : "text-gray-500"
-                                } ${active ? "bg-gray-100" : ""
-                                } block px-4 py-2 text-sm
+                                ${
+                                  option.current
+                                    ? "font-medium text-gray-900"
+                                    : "text-gray-500"
+                                } ${
+                                active ? "bg-gray-100" : ""
+                              } block px-4 py-2 text-sm
                               `}
                             >
                               {option.name}
@@ -310,7 +300,7 @@ export default function Product() {
                                   id={`filter-${section.id}-${optionIdx}`}
                                   name={`${section.id}`}
                                   defaultValue={option.value}
-                                  type="checkbox"
+                                  type="radio"
                                   defaultChecked={option.checked}
                                   className="h-4 w-4 cursor-pointer rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   onChange={handleFilterChange}
