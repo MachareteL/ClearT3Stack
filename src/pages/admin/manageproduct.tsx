@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 
 const Manageproduct: NextPage = () => {
-  const { data: products } = api.product.getAll.useQuery();
+  const { data: products } = api.product.getAll.useQuery({});
   const [currentProduct, setCurrentProduct] = useState<Product>();
   const [id, setId] = useState("");
   const { data } = api.product.getById.useQuery({ id });
