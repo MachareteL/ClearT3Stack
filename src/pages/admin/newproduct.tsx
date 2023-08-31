@@ -1,5 +1,5 @@
 import { Storage } from "~/utils/firebaseConfig";
-import { ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { api } from "~/utils/api";
 
@@ -13,7 +13,7 @@ export default function CriarProduto() {
     description: "",
     imageUrl: "",
     volume: 5,
-    onSale: false
+    onSale: false,
   });
 
   const createProduct = api.product.create.useMutation({
@@ -22,7 +22,7 @@ export default function CriarProduto() {
     },
   });
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     createProduct.mutate({ product });
   }
@@ -71,9 +71,13 @@ export default function CriarProduto() {
         alert(error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((imageUrl) => {
-          setProduct({ ...product, imageUrl });
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((imageUrl) => {
+            setProduct({ ...product, imageUrl });
+          })
+          .catch((e) => {
+            console.log(e);
+          });
       }
     );
   }
@@ -88,7 +92,7 @@ export default function CriarProduto() {
             </h3>
           </div>
           <div className="mt-5 md:col-span-2 md:mt-0">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={void handleSubmit}>
               <div className="shadow sm:overflow-hidden sm:rounded-md">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                   {/* Name and Category fields*/}

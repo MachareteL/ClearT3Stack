@@ -31,7 +31,7 @@ const Manageproduct: NextPage = () => {
         onChange={(e) => setId(e.target.value)}
       >
         {products.map((product) => (
-          <option value={product.id}>{product.name}</option>
+          <option value={product.id} key={product.id}>{product.name}</option>
         ))}
       </select>
       <div className="relative my-8 flex flex-col items-center rounded-md border py-8">
@@ -42,7 +42,7 @@ const Manageproduct: NextPage = () => {
           <XMarkIcon className="h-10 w-10" />
         </button>
         <Image
-          src={currentProduct?.imageUrl || "https://via.placeholder.com/150"}
+          src={currentProduct?.imageUrl ?? "https://via.placeholder.com/150"}
           width={200}
           height={200}
           alt=""
