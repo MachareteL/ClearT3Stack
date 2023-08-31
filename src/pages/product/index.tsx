@@ -325,7 +325,7 @@ export default function Product() {
               <div className="lg:col-span-3">
                 <div className="flex flex-wrap items-end gap-4 sm:col-span-9">
                   {data?.map((product) => (
-                    <ProductCard {...product} />
+                    <ProductCard {...product} key={product.id}/>
                   ))}
                 </div>
               </div>
